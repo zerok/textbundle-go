@@ -15,4 +15,5 @@ func TestReader(t *testing.T) {
 	require.Equal(t, 2, r.Metadata.Version)
 	require.True(t, bytes.HasPrefix(r.Text, []byte("# Getting")))
 	require.Len(t, r.Assets, 1)
+	require.Equal(t, "Screenshot 2020-05-15 at 11.41.40.png", r.Assets[0].Name)
 }

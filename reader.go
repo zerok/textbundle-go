@@ -17,7 +17,12 @@ func fn(name string) string {
 type Reader struct {
 	Metadata Metadata
 	Text     []byte
-	Assets   []*zip.File
+	Assets   []Asset
+}
+
+type Asset struct {
+	Name string
+	File *zip.File
 }
 
 func NewReader(r io.ReaderAt, size int64) (*Reader, error) {
@@ -55,7 +60,11 @@ func OpenReader(path string) (*Reader, error) {
 			}
 			bundle.Text = data
 		} else if strings.HasPrefix(f.FileHeader.Name, fnamePrefix+"assets/") && f.FileHeader.Name != fn("assets/") {
-			bundle.Assets = append(bundle.Assets, f)
+			a := Asset{
+				Name: strings.TrimPrefix(f.Name, fnamePrefix+"assets/"),
+				File: f,
+			}
+			bundle.Assets = append(bundle.Assets, a)
 		}
 	}
 	bundle.Metadata = md
